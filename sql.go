@@ -8,7 +8,7 @@ import "fmt"
 //       table: table to generate the update query for.
 //return:
 //       the error
-func updateTableQuery(table string, row Row) string {
+func UpdateTableQuery(table string, row Row) string {
 	stateFips := row.StateFips
 	stateCode := row.StateCode
 	blockPop := row.BlockPop
@@ -27,7 +27,7 @@ func updateTableQuery(table string, row Row) string {
 //		 limit: < 0 will cause assume you don't want a limit
 //return:
 //       the error
-func selectTableQuery(table string, limit int) string {
+func SelectTableQuery(table string, limit int) string {
 	if limit < 0 {
 		return fmt.Sprintf(
 			"SELECT id,latitude,longitude FROM %s;",
