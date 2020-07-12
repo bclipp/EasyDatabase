@@ -1,4 +1,4 @@
-package easydb
+package github.com/bclipp/EasyDatabase
 
 import (
 	"fmt"
