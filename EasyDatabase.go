@@ -81,7 +81,7 @@ func (pg *PostgreSQL) Close() {
 //       the error
 func (pg *PostgreSQL) ReturnTable(tableName string, limit int)([]Row, error) {
 	table := make([]Row, 0)
-	query := selectTableQuery(tableName, limit)
+	query := SelectTableQuery(tableName, limit)
 	fmt.Println(query)
 	rows, err := pg.DB.Query(query);if err != nil {
 		return nil, err
@@ -139,8 +139,8 @@ func (pg *PostgreSQL) SendQuery(query string) (sql.Result, error) {
 //       the error
 func (pg *PostgreSQL) UpdateDBTable(table []Row ,tableName string) error {
 	for _, row := range table {
-		query := updateTableQuery(tableName, row)
-		result, err := pg.sendQuery(query);if err != nil {
+		query := UpdateTableQuery(tableName, row)
+		result, err := pg.SendQuery(query);if err != nil {
 			return err
 		}
 
