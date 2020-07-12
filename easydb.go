@@ -1,6 +1,6 @@
 //This module is used for interacting with the postgresql database
 
-package main
+package easydb
 
 import (
 	"database/sql"
