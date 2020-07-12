@@ -44,7 +44,7 @@ type Row struct {
 // Params:
 // return:
 //       error from the connection setup
-func (pg *PostgreSQL) connect() error {
+func (pg *PostgreSQL) Connect() error {
 	psqlInfo := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable",
 		pg.PostgresUser,
 		pg.PostgresPassword,
@@ -67,7 +67,7 @@ func (pg *PostgreSQL) connect() error {
 // Params:
 // return:
 //       error from the connection setup
-func (pg *PostgreSQL) close() {
+func (pg *PostgreSQL) Close() {
 	_ = pg.DB.Close()
 }
 
@@ -79,7 +79,7 @@ func (pg *PostgreSQL) close() {
 //       Jason return document
 //       rest http response code
 //       the error
-func (pg *PostgreSQL) returnTable(tableName string, limit int)([]Row, error) {
+func (pg *PostgreSQL) ReturnTable(tableName string, limit int)([]Row, error) {
 	table := make([]Row, 0)
 	query := selectTableQuery(tableName, limit)
 	fmt.Println(query)
@@ -124,7 +124,7 @@ func (pg *PostgreSQL) returnTable(tableName string, limit int)([]Row, error) {
 //return:
 //		 result variable , see result interface doc in sql
 //       the error
-func (pg *PostgreSQL) sendQuery(query string) (sql.Result, error) {
+func (pg *PostgreSQL) SendQuery(query string) (sql.Result, error) {
 	logrus.Println(query)
 	result, err := pg.DB.Exec(query)
 	if err != nil { return result, err}
@@ -137,7 +137,7 @@ func (pg *PostgreSQL) sendQuery(query string) (sql.Result, error) {
 //       tableName: the table to query
 //return:
 //       the error
-func (pg *PostgreSQL) updateDBTable(table []Row ,tableName string) error {
+func (pg *PostgreSQL) UpdateDBTable(table []Row ,tableName string) error {
 	for _, row := range table {
 		query := updateTableQuery(tableName, row)
 		result, err := pg.sendQuery(query);if err != nil {
