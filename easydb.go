@@ -1,6 +1,6 @@
 //This module is used for interacting with the postgresql database
 
-package easydb
+package main
 
 import (
 	"database/sql"
@@ -13,9 +13,9 @@ import (
 type database interface {
 	connect()  error
 	close()
-	//updateDBTable(table []Row, tableName string) error
+	updateDBTable(table []Row, tableName string) error
 	sendQuery(query string)  (sql.Result, error)
-	//returnTable(tableName string, limit int) ([]Row, error)
+	returnTable(tableName string, limit int) ([]Row, error)
 }
 
 // Database is used to hold the connection related variables
@@ -25,6 +25,19 @@ type PostgreSQL struct {
 	PostgresPassword string
 	PostgresUser     string
 	PostgresDB       string
+}
+
+
+// Row is used to hold a row of data from a table in the DB
+// only common data is used and needed.
+type Row struct {
+	BlockID   int
+	StateCode string
+	StateFips int
+	BlockPop  int
+	ID        int
+	Latitude  float64
+	Longitude float64
 }
 
 // Connect is used to handle connecting to the database
@@ -58,8 +71,6 @@ func (pg *PostgreSQL) close() {
 	_ = pg.DB.Close()
 }
 
-
-/*
 // ReadTable is used for reading data from the database and storing it in the
 // table field
 // Params:
@@ -68,7 +79,7 @@ func (pg *PostgreSQL) close() {
 //       Jason return document
 //       rest http response code
 //       the error
-func (pg *PostgreSQL) returnTable(table struct{},tableName string, limit int)([]Row, error) {
+func (pg *PostgreSQL) returnTable(tableName string, limit int)([]Row, error) {
 	table := make([]Row, 0)
 	query := selectTableQuery(tableName, limit)
 	fmt.Println(query)
@@ -105,7 +116,7 @@ func (pg *PostgreSQL) returnTable(table struct{},tableName string, limit int)([]
 	}
 
 	return table, nil
-}*/
+}
 
 // SendQuery is used for sending query to a database
 // Params:
@@ -143,4 +154,5 @@ func (pg *PostgreSQL) updateDBTable(table []Row ,tableName string) error {
 	}
 
 	return nil
+
 }
