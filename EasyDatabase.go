@@ -19,7 +19,7 @@ type Database interface {
 }
 
 // Database is used to hold the connection related variables
-type PostgreSQL struct {
+type postgreSQL struct {
 	DB               *sql.DB
 	IPAddress        string
 	PostgresPassword string
