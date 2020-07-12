@@ -6,7 +6,6 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
-	"github.com/sirupsen/logrus"
 )
 
 
@@ -45,13 +44,13 @@ type Row struct {
 // return:
 //       error from the connection setup
 func (pg *PostgreSQL) Connect() error {
-	psqlInfo := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable",
+	connectionString := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable",
 		pg.PostgresUser,
 		pg.PostgresPassword,
 		pg.IPAddress,
 		pg.PostgresDB)
 
-	db, err := sql.Open("postgres", psqlInfo);if err != nil {
+	db, err := sql.Open("postgres", connectionString);if err != nil {
 		return err
 	}
 	pg.DB = db
@@ -125,7 +124,6 @@ func (pg *PostgreSQL) ReturnTable(tableName string, limit int)([]Row, error) {
 //		 result variable , see result interface doc in sql
 //       the error
 func (pg *PostgreSQL) SendQuery(query string) (sql.Result, error) {
-	logrus.Println(query)
 	result, err := pg.DB.Exec(query)
 	if err != nil { return result, err}
 
