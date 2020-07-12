@@ -1,4 +1,4 @@
-module easydb
+module github.com/bclipp/EasyDatabase
 
 go 1.13
 
