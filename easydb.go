@@ -10,7 +10,7 @@ import (
 )
 
 
-type database interface {
+type Database interface {
 	connect()  error
 	close()
 	updateDBTable(table []Row, tableName string) error
