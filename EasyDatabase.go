@@ -1,6 +1,6 @@
 //This module is used for interacting with the postgresql database
 
-package github.com/bclipp/EasyDatabase
+package EasyDatabase
 
 import (
 	"database/sql"
