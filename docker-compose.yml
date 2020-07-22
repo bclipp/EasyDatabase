@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=${PASSWORD}
+      - POSTGRES_USER=${USERNAME}
+      - POSTGRES_DB=${DATABASE}
+    ports:
+      - 5432:5432
+    volumes:
+      - ./config_pg/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./config_pg/customers.csv:/tmp/customers.csv
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

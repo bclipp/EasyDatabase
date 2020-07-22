@@ -8,13 +8,21 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type Row struct {
+	BlockID   int
+	StateCode string
+	StateFips int
+	BlockPop  int
+	ID        int
+	Latitude  float64
+	Longitude float64
+}
 
 type Database interface {
 	connect()  error
-	close()
-	updateDBTable(table []Row, tableName string) error
+	Disconnect()
+	sendQueryReturnData(sqlQuery string, table *[]Row, processRows func(rows *sql.Rows)) ([]struct{}, error)
 	sendQuery(query string)  (sql.Result, error)
-	returnTable(tableName string, limit int) ([]Row, error)
 }
 
 // Database is used to hold the connection related variables
@@ -24,19 +32,6 @@ type PostgreSQL struct {
 	PostgresPassword string
 	PostgresUser     string
 	PostgresDB       string
-}
-
-
-// Row is used to hold a row of data from a table in the DB
-// only common data is used and needed.
-type Row struct {
-	BlockID   int
-	StateCode string
-	StateFips int
-	BlockPop  int
-	ID        int
-	Latitude  float64
-	Longitude float64
 }
 
 // Connect is used to handle connecting to the database
@@ -66,7 +61,7 @@ func (pg *PostgreSQL) Connect() error {
 // Params:
 // return:
 //       error from the connection setup
-func (pg *PostgreSQL) Close() {
+func (pg *PostgreSQL) Disconnect() {
 	_ = pg.DB.Close()
 }
 
@@ -78,43 +73,15 @@ func (pg *PostgreSQL) Close() {
 //       Jason return document
 //       rest http response code
 //       the error
-func (pg *PostgreSQL) ReturnTable(tableName string, limit int)([]Row, error) {
-	table := make([]Row, 0)
-	query := SelectTableQuery(tableName, limit)
-	fmt.Println(query)
-	rows, err := pg.DB.Query(query);if err != nil {
-		return nil, err
+func (pg *PostgreSQL) sendQueryReturnData(
+	sqlQuery string,
+	processRows func(rows *sql.Rows)(table []struct{}, err error))(table []struct{}, err error) {
+	rows, err := pg.DB.Query(sqlQuery);if err != nil {
+		return nil,err
 	}
 	defer rows.Close()
-
-	for rows.Next() {
-		var latitude float64
-
-		var longitude float64
-
-		var id int
-
-		err = rows.Scan(&id ,&latitude, &longitude);if err != nil {
-			return nil, err
-		}
-
-		newRow := Row{
-			Latitude:  latitude,
-			Longitude: longitude,
-			ID:        id,
-		}
-		table = append(table, newRow)
-	}
-
-	err = rows.Err();if err != nil {
-		return nil, err
-	}
-
-	err = rows.Close();if err != nil {
-		return nil, err
-	}
-
-	return table, nil
+	table,err = processRows(rows)
+	return table, err
 }
 
 // SendQuery is used for sending query to a database
@@ -130,6 +97,7 @@ func (pg *PostgreSQL) SendQuery(query string) (sql.Result, error) {
 	return result, nil
 }
 
+/*
 // UpdateDbTable is used for taking the the table variable and updating the db
 // Params:
 //       tableName: the table to query
@@ -154,3 +122,4 @@ func (pg *PostgreSQL) UpdateDBTable(table []Row ,tableName string) error {
 	return nil
 
 }
+*/
