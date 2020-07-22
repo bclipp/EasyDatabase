@@ -4,7 +4,7 @@ services:
     image: postgres
     environment:
       - POSTGRES_PASSWORD=${PASSWORD}
-      - POSTGRES_USER=${USERNAME}
+      - POSTGRES_USER=testing1234
       - POSTGRES_DB=${DATABASE}
     ports:
       - 5432:5432
@@ -14,6 +14,5 @@ services:
 
   adminer:
     image: adminer
-    restart: always
     ports:
       - 8080:8080
