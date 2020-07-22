@@ -75,7 +75,7 @@ func (pg *PostgreSQL) Disconnect() {
 //       the error
 func (pg *PostgreSQL) sendQueryReturnData(
 	sqlQuery string,
-	processRows func(rows *sql.Rows)(table []struct{}, err error))(table []struct{}, err error) {
+	processRows func(rows *sql.Rows) ([]struct{},error))(table []struct{}, err error) {
 	rows, err := pg.DB.Query(sqlQuery);if err != nil {
 		return nil,err
 	}

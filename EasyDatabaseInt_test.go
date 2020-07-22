@@ -116,7 +116,7 @@ func TestPostgreSQL_sendQueryReturnData(t *testing.T){
 	// only common data is used and needed.
 
 	defer pg.Disconnect()
-	_,err = pg.sendQueryReturnData("SELECT * FROM customers;",processTable());if err != nil {
+	_,err = pg.sendQueryReturnData("SELECT * FROM customers;",processTable);if err != nil {
 		fmt.Print(err.Error())
 	}
 }
