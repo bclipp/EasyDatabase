@@ -73,15 +73,9 @@ func (pg *PostgreSQL) Disconnect() {
 //       Jason return document
 //       rest http response code
 //       the error
-func (pg *PostgreSQL) sendQueryReturnData(
-	sqlQuery string,
-	processRows func(rows *sql.Rows) ([]struct{},error))(table []struct{}, err error) {
-	rows, err := pg.DB.Query(sqlQuery);if err != nil {
-		return nil,err
-	}
-	defer rows.Close()
-	table,err = processRows(rows)
-	return table, err
+func (pg *PostgreSQL) sendQueryReturnData(sqlQuery string)(*sql.Rows, error) {
+	rows, err := pg.DB.Query(sqlQuery)
+	return rows, err
 }
 
 // SendQuery is used for sending query to a database
