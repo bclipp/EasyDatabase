@@ -15,7 +15,7 @@ import (
 )
 
 
-func TestPostgreSQL_ConnectDisconnect(t *testing.T){
+func TestPostgreSQL_integration_ConnectDisconnect(t *testing.T){
 	config := GetVariables()
 	var pg = PostgreSQL{
 		IPAddress:        config["postgresIP"],
@@ -84,6 +84,7 @@ func TestPostgreSQL_sendQueryReturnData(t *testing.T){
 		}
 		table = append(table, newRow)
 		fmt.Println(latitude, longitude)
+		fmt.Println(table)
 	}
 	err = rows.Err();if err != nil {
 		print(err)
