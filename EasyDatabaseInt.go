@@ -21,7 +21,7 @@ type Row struct {
 type Database interface {
 	connect()  error
 	Disconnect()
-	sendQueryReturnData(sqlQuery string, table *[]Row, processRows func(rows *sql.Rows)) ([]struct{}, error)
+	sendQueryReturnData(sqlQuery string)(*sql.Rows, error)
 	sendQuery(query string)  (sql.Result, error)
 }
 
@@ -39,13 +39,11 @@ type PostgreSQL struct {
 // return:
 //       error from the connection setup
 func (pg *PostgreSQL) Connect() error {
-	connectionString := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable",
-		pg.PostgresUser,
-		pg.PostgresPassword,
-		pg.IPAddress,
-		pg.PostgresDB)
+	psqlInfo := fmt.Sprintf("host=%s user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		pg.IPAddress, pg.PostgresUser, pg.PostgresPassword, pg.PostgresDB)
 
-	db, err := sql.Open("postgres", connectionString);if err != nil {
+	db, err := sql.Open("postgres", psqlInfo);if err != nil {
 		return err
 	}
 	pg.DB = db
@@ -90,30 +88,3 @@ func (pg *PostgreSQL) SendQuery(query string) (sql.Result, error) {
 
 	return result, nil
 }
-
-/*
-// UpdateDbTable is used for taking the the table variable and updating the db
-// Params:
-//       tableName: the table to query
-//return:
-//       the error
-func (pg *PostgreSQL) UpdateDBTable(table []Row ,tableName string) error {
-	for _, row := range table {
-		query := UpdateTableQuery(tableName, row)
-		result, err := pg.SendQuery(query);if err != nil {
-			return err
-		}
-
-		count, err := result.RowsAffected();if err != nil {
-			return err
-		}
-
-		if count != 1 {
-			print("Error when updating row, rows effected is not 1.")
-		}
-	}
-
-	return nil
-
-}
-*/

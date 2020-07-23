@@ -57,8 +57,6 @@ func TestPostgreSQL_sendQueryReturnData(t *testing.T){
 	err := pg.Connect();if err != nil {
 		fmt.Print(err.Error())
 	}
-	// Row is used to hold a row of data from a table in the DB
-	// only common data is used and needed.
 
 	defer pg.Disconnect()
 	rows, err := pg.sendQueryReturnData("SELECT latitude,longitude FROM customers;");if err != nil {
@@ -85,6 +83,7 @@ func TestPostgreSQL_sendQueryReturnData(t *testing.T){
 			Longitude: longitude,
 		}
 		table = append(table, newRow)
+		fmt.Println(latitude, longitude)
 	}
 	err = rows.Err();if err != nil {
 		print(err)
@@ -106,48 +105,3 @@ func GetVariables() map[string]string {
 
 	return config
 }
-
-/*
-func processTable(rows *sql.Rows, table *[]struct{}) (  error) {
-	var table []struct {
-		BlockID   int
-		StateCode string
-		StateFips int
-		BlockPop  int
-		ID        int
-		Latitude  float64
-		Longitude float64
-	}
-
-	for rows.Next() {
-		var latitude float64
-		var longitude float64
-		var id int
-		err := rows.Scan(&latitude, &longitude);if err != nil {
-			return nil,err
-		}
-		newRow := struct {
-			BlockID   int
-			StateCode string
-			StateFips int
-			BlockPop  int
-			ID        int
-			Latitude  float64
-			Longitude float64
-		}{
-			Latitude:  latitude,
-			Longitude: longitude,
-			ID:        id,
-		}
-		table = append(table, newRow)
-	}
-	err := rows.Err();if err != nil {
-		return nil, err
-	}
-	err = rows.Close();if err != nil {
-		return nil, err
-	}
-	return table,nil
-}
-*/
-
